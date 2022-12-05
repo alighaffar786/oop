@@ -114,27 +114,26 @@ class DB{
         self::closeConnection();
         return $row;
     }
-    public static function getList($table,$par=null){
-        // print_r($condition);
-        // die;
+    public static function getList($table,$param=null){
+     
         $sql = "Select * from $table ";
-        if($par != null){
-            if(isset($par['condition']) && !isset($par['operator'])){
-                foreach($par['condition'] as $col=>$value){
+        if($param != null){
+            if(isset($param['condition']) && !isset($param['operator'])){
+                foreach($param['condition'] as $col=>$value){
                     $query = " where ". $col."'$value'";
                 }
                 $sql .= $query;
                 
             }
-           if(isset($par['operator'])){
-                foreach($par['condition'] as $col=>$value){
+           if(isset($param['operator'])){
+                foreach($param['condition'] as $col=>$value){
                     $query[] =  $col."'$value'";
                 }
-                $operator = $par['operator'];
+                $operator = $param['operator'];
                 $sql .= " WHERE ".implode(" $operator ",$query);
            }
-           if(isset($par['order_by'])){
-            $order = $par['order_by'];
+           if(isset($param['order_by'])){
+            $order = $param['order_by'];
             $sql .= " order by $order";
             
            }

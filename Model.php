@@ -3,7 +3,19 @@
 use LDAP\Result;
 
 require_once("DB.php");
-class Model
+interface crud {
+    public  function create($payload);
+    public  function update($payload);
+    public function delete();
+ } 
+ interface validate{
+    public function validteRequire();
+    public function validateUnique();
+    public function validteAlphabet();
+    public function validteLength();
+ }
+ 
+class Model implements crud,validate
 {
     // properties
 
@@ -21,8 +33,7 @@ class Model
 
     public function __construct()
     {
-        // $this->table_name="";
-        // $this->pk = "";
+
         $this->attributes = new stdClass;
     }
     // create
@@ -43,22 +54,11 @@ class Model
         $this->setInstance($payload);
         $this->validate();
         if (empty($this->errors)) {
-            // $res = DB::insert($table, $payload);
-            // $this->setInstance($res);
-
-
+ 
             $res = DB::update($table, $this->id, $payload);
             $this->setInstance($res);
         }
 
-
-        // $table = get_class($this)::$table_name;
-        // $this->validation($payload, $this->id);
-
-
-        // if (empty($this->errors)) {
-
-        // }
     }
     // delete
     public function delete()
@@ -78,15 +78,17 @@ class Model
         return $instance;
     }
 
-    // get list
-    public static function getList($par=null)
+    /**
+     * 
+     */
+    public static function getList($param=null)
     {
         // $conditions = [
 
         //     "name"=>["=","ali"]
         // ];
         $class = get_called_class();
-        $rows = DB::getList($class::$table_name,$par);
+        $rows = DB::getList($class::$table_name,$param);
         $instance = new $class();
         return $instance->multiInstance($rows);
     }

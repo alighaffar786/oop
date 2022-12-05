@@ -9,8 +9,8 @@ require_once("User.php");
 // $user->update(["father_name"=>"khan","email"=>"amir@gmail.comffff"]);
 // print_r($user);
 
-$user = User::get(294);
-// $user->update(["father_name"=>"khan","email"=>"amir@gmail.comffff"]);
+// $user = User::get(294);
+// $user->update(["password"=>"2xcvsdasdafasdfasdf65","email"=>"amir@gmail.comffff"]);
 // $user = new User();
 // $payload = ["name"=>"888","father_name"=>"","email"=>"aghaffar@gmail.com","password"=>"12345678"];
 // $user->create($payload);
@@ -19,14 +19,16 @@ $user = User::get(294);
 // $condition=["id>"=>290];
 // $operator="AND";
 // $order = "name";
-$par=[
-    "condition"=>["father_name="=>"khan"],
-    "order_by"=>"name desc"
-];
+// $param=[
+//     "condition"=>["father_name ="=>"khan","role ="=>"user"],
+//     "order_by"=> ["name"=> "desc","role"=>"ASC"],
+// ];    "condition"=>["father_name ="=>"khan","role ="=>"user"],
 
 
-
-
-$user = User::getList();
-// $user->update(["name"=>"bilal"]);
-print_r($user);
+// Select * from users where (id > 9 and id <10) OR (id>5 and id <6)
+// $condition = [
+//     ["id",">",9,"AND"],
+//     ["id","<",10]
+// ]
+// $user = User::getList($param);
+// print_r($user);
