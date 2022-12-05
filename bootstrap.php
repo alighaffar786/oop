@@ -9,11 +9,14 @@ require_once("User.php");
 // $user->update(["father_name"=>"khan","email"=>"amir@gmail.comffff"]);
 // print_r($user);
 
-
-$user = new User();
-$payload = ["name"=>"Ali Abbas","father_name"=>"afzaal","email"=>"ali@site.com","password"=>"1265878"];
+// $user = User::get(294);
+// $user->update(["father_name"=>"khan","email"=>"amir@gmail.comffff"]);
+// $user = new User();
+// $payload = ["name"=>"888","father_name"=>"","email"=>"aghaffar@gmail.com","password"=>"12345678"];
 // $user->create($payload);
 // print_r($user);
+// $users  = User::getList();
 
-$users  = User::getList();
-print_r($users);
+$user = User::get(285);
+// $user->update(["name"=>"","email"=>"umer@gmil.com","password"=>"65"]);
+print_r($user);

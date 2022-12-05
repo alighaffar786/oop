@@ -3,11 +3,13 @@ require 'Model.php';
 class User extends Model
 {
     // properties
-
-    public static $table_name = "user";
-    public $rules = ["alphabet" => ["name"=>"Name is Require", "father_name"], "length" => ["password"=>[8,10]]
-                                        , "unique" => ["email"], "required" => ["name", "father_name", "email", "password"]];
     public  $id, $name, $father_name, $email, $password;
 
-    
+    public static $table_name = "user";
+    protected static $primary_key = "id";
+    public $rules = [
+    "alphabet" => ["name"=>"alphabet error","father_name"],
+    "length" => ["password"=>["min"=>[8=>"minimum error"],"max"=>[10=>"maximum error"]]],
+    "unique" => ["email"=>"unique error"],
+    "required" => ["name", "father_name", "email", "password"]];
 }
