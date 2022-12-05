@@ -71,7 +71,6 @@ class Model
 
     public static function get($id)
     {
-
         $class = get_called_class();
         $row = DB::get($class::$table_name, $id);
         $instance = new $class();
@@ -80,13 +79,14 @@ class Model
     }
 
     // get list
-    public static function getList($conditions = [], $orders = [])
+    public static function getList($par=null)
     {
         // $conditions = [
+
         //     "name"=>["=","ali"]
         // ];
         $class = get_called_class();
-        $rows = DB::getList($class::$table_name);
+        $rows = DB::getList($class::$table_name,$par);
         $instance = new $class();
         return $instance->multiInstance($rows);
     }

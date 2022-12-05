@@ -114,26 +114,44 @@ class DB{
         self::closeConnection();
         return $row;
     }
-    public static function getList($table){
-        $sql = "Select * from $table";
+    public static function getList($table,$par=null){
+        // print_r($condition);
+        // die;
+        $sql = "Select * from $table ";
+        if($par != null){
+            if(isset($par['condition']) && !isset($par['operator'])){
+                foreach($par['condition'] as $col=>$value){
+                    $query = " where ". $col."'$value'";
+                }
+                $sql .= $query;
+                
+            }
+           if(isset($par['operator'])){
+                foreach($par['condition'] as $col=>$value){
+                    $query[] =  $col."'$value'";
+                }
+                $operator = $par['operator'];
+                $sql .= " WHERE ".implode(" $operator ",$query);
+           }
+           if(isset($par['order_by'])){
+            $order = $par['order_by'];
+            $sql .= " order by $order";
+            
+           }
+    
+        }
+
         self::startConnection();
         $result =  mysqli_query(self::$connection,$sql);
         $rows =  mysqli_fetch_all($result,MYSQLI_ASSOC);
         self::closeConnection();
         return $rows;
     }
-    /**
-     * 
-    */
     public static function getAttributeByValue($table,$column,$value, $pk, $pk_column){
          $sql = "Select * from $table where $column='$value'";
-        
-
         if(!empty($pk) &&  $pk > 0){
             $sql.=" AND {$pk_column} <> $pk";
-            
         }
-        
         self::startConnection();
         $result =  mysqli_query(self::$connection,$sql);
         $row =  mysqli_fetch_assoc($result);
@@ -141,4 +159,3 @@ class DB{
         return $row;
     }
 }
-?>
