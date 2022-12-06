@@ -20,15 +20,40 @@ require_once("User.php");
 // $operator="AND";
 // $order = "name";
 // $param=[
-//     "condition"=>["father_name ="=>"khan","role ="=>"user"],
+//     "condition"=>[[name]],
 //     "order_by"=> ["name"=> "desc","role"=>"ASC"],
 // ];    "condition"=>["father_name ="=>"khan","role ="=>"user"],
+$param=[
+    "condition"=>[
+       "braces1"=> [
+            ["name"=>["startWith"=>"a"]],
+            ["and"],
+            ["id"=>["lessThan"=>"301"]]
+        ],
+        
+        ["and"],
+        ["id"=>["greaterThan"=>"285"]],
+    ],
+    // "order_by"=> ["name"=> "desc"],
+];
 
+$condition = [
+    []
+]
 
-// Select * from users where (id > 9 and id <10) OR (id>5 and id <6)
-// $condition = [
+?>
+
+Select * from users ( ) and ( )
+
+// Select * from users where id 
+$user = User::getList($param);
+print_r($user);
+
+// Select * from users where (id > 9 and id <10) and (sdafasd);
+// condition => [
 //     ["id",">",9,"AND"],
 //     ["id","<",10]
 // ]
-// $user = User::getList($param);
-// print_r($user);
+// ["id"=>["lessThan"=>"25"]]
+
+// print_r($user);https://www.c-sharpcorner.com/blogs/use-both-order-by-asc-and-desc-in-single-sql-server-query1

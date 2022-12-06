@@ -116,27 +116,10 @@ class DB{
     }
     public static function getList($table,$param=null){
      
-        $sql = "Select * from $table ";
+        $sql = "Select * from $table where ";
         if($param != null){
-            if(isset($param['condition']) && !isset($param['operator'])){
-                foreach($param['condition'] as $col=>$value){
-                    $query = " where ". $col."'$value'";
-                }
-                $sql .= $query;
-                
-            }
-           if(isset($param['operator'])){
-                foreach($param['condition'] as $col=>$value){
-                    $query[] =  $col."'$value'";
-                }
-                $operator = $param['operator'];
-                $sql .= " WHERE ".implode(" $operator ",$query);
-           }
-           if(isset($param['order_by'])){
-            $order = $param['order_by'];
-            $sql .= " order by $order";
-            
-           }
+           $sql .= implode(" ", $param);
+            // die;
     
         }
 
