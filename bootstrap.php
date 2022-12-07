@@ -2,8 +2,11 @@
 
 require_once("User.php");
 // $user = new User();
-// $payload = ["name"=>"dfd","father_name"=>"ghaffar","email"=>"alidddx@gfdfdmail.com","password"=>"12678"];
+// $payload = ["name"=>"dfd","father_name"=>"ghaffar","email"=>"alighaffa879r@gmail.com","password"=>"123456678"];
 // $user->create($payload);
+    // print_r();
+    // echo $user->errors['password'];
+    print_r($user);
 // $user->update(["name"=>"ali"]);
 // $user = User::get(294);
 // $user->update(["father_name"=>"khan","email"=>"amir@gmail.comffff"]);
@@ -25,25 +28,31 @@ require_once("User.php");
 // ];    "condition"=>["father_name ="=>"khan","role ="=>"user"],
 $param=[
     "condition"=>[
-       "braces1"=> [
+        [
             ["name"=>["startWith"=>"a"]],
             ["and"],
             ["id"=>["lessThan"=>"301"]]
         ],
-        
         ["and"],
-        ["id"=>["greaterThan"=>"285"]],
+        [
+            ["father_name"=>["startWith"=>"a"]],
+            ["and"],
+            ["id"=>["lessThan"=>"301"]]
+        ]
+        // ["name"=>["startWith"=>"a"]],
+        // ["and"],
+        // ["id"=>["greaterThan"=>"285"]],
     ],
-    // "order_by"=> ["name"=> "desc"],
+    "order_by"=> ["name"=> "desc"],
+    // alterrate
 ];
 
-$condition = [
-    []
-]
+// $condition = [
+//     []
+// ]
 
-?>
 
-Select * from users ( ) and ( )
+// Select * from users ( ) and ( )
 
 // Select * from users where id 
 $user = User::getList($param);

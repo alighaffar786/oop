@@ -48,11 +48,12 @@ class DB{
         $class = get_called_class();
         $laod = new $class();
         $laod->load();
-        self::$_host = getenv('server_name');
+        self::$_host = getenv('dbHost');
         self::$_username = getenv('username');
         self::$_password = getenv('password');
         self::$_database = getenv('dbname');
-        
+        // echo self::$_host;
+        // die;
         // self::$_database=
         self::$connection =  new mysqli(self::$_host, self::$_username, self::$_password,self::$_database); 
         
@@ -66,13 +67,13 @@ class DB{
 
 
     public static function insert($table, $payload){
-        $sql = "INSERT INTO {$table} SET ";
-        $query = [];
-        foreach($payload as $col=>$val){
-            $query[] = $col."='".$val."'";
-        }
-        $sql.= implode(",", $query);
+        $table_columns = implode(',', array_keys($payload));
+        $table_value = implode("','", $payload);
+         $sql="INSERT INTO $table($table_columns) VALUES('$table_value')";
+    print_r($sql);
         self::startConnection();
+    //    print_r();
+    //    die; 
         mysqli_query(self::$connection,$sql);
         $pk = mysqli_insert_id(self::$connection);
         self::closeConnection();
@@ -116,10 +117,10 @@ class DB{
     }
     public static function getList($table,$param=null){
      
-        $sql = "Select * from $table where ";
+        $sql = "Select * from $table";
         if($param != null){
-           $sql .= implode(" ", $param);
-            // die;
+          echo $sql .=" where ". implode(" ", $param);
+            die;
     
         }
 
@@ -139,5 +140,17 @@ class DB{
         $row =  mysqli_fetch_assoc($result);
         self::closeConnection();
         return $row;
+    }
+    public static function loginUser($table,$payload){
+        $email = $payload['email'];
+        $pass = $payload['password'];
+         $sql = "Select * from $table where  email='$email' and password='$pass'";
+        
+        self::startConnection();
+        $result =  mysqli_query(self::$connection,$sql);
+        $row =  mysqli_fetch_assoc($result);
+        self::closeConnection();
+        return $row;
+        
     }
 }

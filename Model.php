@@ -11,10 +11,10 @@ interface crud
 }
 interface validate
 {
-    public function validteRequire();
-    public function validateUnique();
-    public function validteAlphabet();
-    public function validteLength();
+    public function validteRequire($payload);
+    public function validateUnique($payload);
+    public function validteAlphabet($payload);
+    public function validteLength($payload);
 }
 
 class Model implements crud, validate
@@ -25,6 +25,10 @@ class Model implements crud, validate
     protected $id = "";
     public $attributes;
     public $rules = ["required" => [], "unique" => []];
+    public $loginrules = [
+        "length" => [],
+        "required" => []
+    ];
     protected static $primary_key = "id";
 
 
@@ -41,10 +45,16 @@ class Model implements crud, validate
     // create
     public function create($payload)
     {
+        // print_r($payload);
+        // die;
+        // die;
         $table = get_class($this)::$table_name;
         $this->setInstance($payload);
         $this->validate();
+        // print_r($this->errors);
+        // die;
         if (empty($this->errors)) {
+            
             $res = DB::insert($table, $payload);
             $this->setInstance($res);
         }
@@ -91,10 +101,12 @@ class Model implements crud, validate
         $class = get_called_class();
         $obj = new $class();
         if ($param != null) {
-
+            
             if (isset($param['condition'])) {
                 foreach ($param['condition'] as $key => $value) {
-                    if (is_string($key)) {
+                    $result = $obj->checkArray($value);
+                    
+                    if (is_array($result)) {
                         $query[] = "(";
                         foreach ($value as $subkey => $subvalue) {
                             if (is_array($subvalue)) {
@@ -109,7 +121,7 @@ class Model implements crud, validate
                         }
                         $query[] = ")";
                     }
-                    if (is_int($key)) {
+                    else {
                         foreach ($value as $subkey => $subvalue) {
 
                             if (is_string($subkey)) {
@@ -172,10 +184,10 @@ class Model implements crud, validate
 
     public function validate()
     {
-        $this->validteRequire();
-        $this->validteAlphabet();
-        $this->validateUnique();
-        $this->validteLength();
+        $this->validteAlphabet($this->rules['alphabet']);
+        $this->validateUnique($this->rules['unique']);
+        $this->validteLength($this->rules['length']);
+        $this->validteRequire($this->rules['required']);
         return $this;
     }
 
@@ -183,25 +195,25 @@ class Model implements crud, validate
     // method
 
     // validteRequire
-    public function validteRequire()
+    public function validteRequire($payload)
     {
-        foreach ($this->rules['required'] as $field => $value) {
+        foreach ($payload as $field => $value) {
             if (is_string($field)) {
                 if (empty($this->$field)) {
                     $this->errors[$field] = $value;
                 }
             } else {
                 if (empty($this->$value)) {
-                    $this->errors[$value] = $value . " is Required";
+                    $this->errors[$value] = " is Required";
                 }
             }
         }
     }
     // validteAlphabet
-    public function validteAlphabet()
+    public function validteAlphabet($payload)
     {
 
-        foreach ($this->rules['alphabet'] as $field => $value) {
+        foreach ($payload as $field => $value) {
             if (is_string($field)) {
                 if (!preg_match("/^[a-zA-Z ]*$/", $this->$field)) {
                     $this->errors[$field] = $value;
@@ -217,11 +229,11 @@ class Model implements crud, validate
         }
     }
     // validateUnique
-    public  function validateUnique()
+    public  function validateUnique($payload)
     {
         $pk_column = $this->getPrimaryKeyColumn();
 
-        foreach ($this->rules['unique'] as $field => $value) {
+        foreach ($payload as $field => $value) {
             if (is_string($field)) {
                 $model =  self::getAttributeByValue($field, $this->$field, $this->$pk_column);
                 if (!empty($model->$pk_column)) {
@@ -237,10 +249,10 @@ class Model implements crud, validate
         }
     }
     // validteLength
-    public function validteLength()
+    public function validteLength($payload)
     {
 
-        foreach ($this->rules['length'] as $field => $value) {
+        foreach ($payload as $field => $value) {
             foreach ($value as $key => $data) {
                 if ($key == "max") {
                     if (is_array($data)) {
@@ -331,5 +343,43 @@ class Model implements crud, validate
                     break;
             }
         }
+    }
+    public static function checkArray($data){
+        foreach($data as $value){
+            if(is_array($value)){
+                foreach($value as $subvalue){
+                    if(is_array($subvalue)){
+                        return $subvalue;
+                        break;
+                    }
+                }
+            }
+            else{
+                return"false";
+            }
+        }
+        
+    }
+    public function loginValidate()
+    {
+        // $this->validteLength($this->loginrules['length']);
+        $this->validteRequire($this->loginrules['required']);
+        
+        return $this;
+    }
+    public static function login($payload){
+        $class = self::getCalledClass();
+        $instance = new $class();
+        $instance->setInstance($payload);
+        $instance->loginValidate();
+        
+        if(empty($instance->error)){
+            $row = DB::loginUser($class::$table_name, $payload);
+            if(!empty($row)){
+                $instance->setInstance($row);
+            }
+        }
+        
+        return $instance;   
     }
 }

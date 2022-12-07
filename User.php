@@ -11,5 +11,11 @@ class User extends Model
     "alphabet" => ["name"=>"alphabet error","father_name"],
     "length" => ["password"=>["min"=>[8=>"minimum error"],"max"=>[10=>"maximum error"]]],
     "unique" => ["email"=>"unique error"],
-    "required" => ["name", "father_name", "email", "password"]];
+    "required" => ["name", "father_name", "email", "password"]
+    ];
+    
+    public $loginrules = [
+        // "length" => ["password"=>["min"=>[8=>""],"max"=>[10=>"maximum error"]]],
+        "required" => ["email", "password"]
+    ];
 }
